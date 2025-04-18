@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - classicmodels_data:/var/lib/mysql
+      - classicmodels_data:/var/lib/mysql # odio esta linea, por no usar un volumen nombrado pase 3 horas tratando de ver porque funcionaba solo la primera vez que corria el compose
       - ./database/mysqlsampledatabase.sql:/docker-entrypoint-initdb.d/init.sql
 
   go-api:
@@ -27,4 +27,4 @@ services:
       - go-api
 
 volumes:
-  classicmodels_data:
+  classicmodels_data: #esta tambien la odio 

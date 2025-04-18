@@ -10,7 +10,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// Employee represents an employee record with the desired fields.
 type Employee struct {
 	EmployeeNumber int
 	LastName       string
@@ -68,34 +67,32 @@ func employeesHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	const maxRetries = 100
-	const retryDelay = 2 * time.Second // Duration to wait between retries
+	const maxRetries = 100 // se que es absurdamente alto pero me fallo en conectarse en 5, 10, 15 y 25 intentos porlomenos una vez durante mis pruebas entonces ¯\_(ツ)_/¯
+	const retryDelay = 2 * time.Second
 
-	// DSN for connecting to the MySQL classicmodels database
 	dsn := "root:1234@tcp(db:3306)/classicmodels"
 	var db *sql.DB
 	var err error
 
-	// Retry logic for establishing a database connection
+	// aqui uso las variables de arriba para intentar conectarme a la base de datos, si funciona se sale del loop
 	for i := 0; i < maxRetries; i++ {
 		db, err = sql.Open("mysql", dsn)
 		if err == nil {
-			// Try to ping the database to check if it's available
 			err = db.Ping()
 			if err == nil {
-				break // Successful connection
+				break
 			}
 		}
 
 		fmt.Printf("Database not ready, retrying in %v... (attempt %d)\n", retryDelay, i+1)
-		time.Sleep(retryDelay) // Wait before retrying
+		time.Sleep(retryDelay) // Espera antes de volver a intentar la conectarse
 	}
 
 	if err != nil {
 		log.Fatalf("Error connecting to the database after %d attempts: %v", maxRetries, err)
 		return
 	}
-	defer db.Close() // Defer closing the database connection
+	defer db.Close()
 
 	fmt.Println("Successfully connected to the database!")
 
