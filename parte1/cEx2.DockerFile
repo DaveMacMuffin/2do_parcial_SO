@@ -27,11 +27,12 @@ RUN apt-get update && apt-get install -y fontconfig fonts-dejavu \
 CMD ["godot", "--headless"]
 
 
-#Para correr el contenedor:
+# para iniciarr el contenedor:
 # navegar al directorio con el Dockerfile
 # docker build -t imagen_examen -f cEx2.DockerFile .
 # docker run -d --name contenedor imagen_examen
 
-# Para correr el contenedor en modo interactivo
+# para correr el contenedor en modo interactivo:
 # docker run -it --name contenedor imagen_examen
-#docker exec -it contenedor /bin/bash
+# o si ya iniciamos el contenedor:
+# docker exec -it contenedor /bin/bash

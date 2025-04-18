@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: contenedor-sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: classicmodels
+    ports:
+      - "3306:3306"
+    volumes:
+      - classicmodels_data:/var/lib/mysql
+      - ./database/mysqlsampledatabase.sql:/docker-entrypoint-initdb.d/init.sql
+
+  go-api:
+    build: ./goApi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  react-app:
+    build: ./react_front
+    ports:
+      - "3000:80"
+    depends_on:
+      - go-api
+
+volumes:
+  classicmodels_data:
